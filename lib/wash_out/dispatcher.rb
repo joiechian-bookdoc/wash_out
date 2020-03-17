@@ -84,7 +84,7 @@ module WashOut
     # Render a SOAP response.
     def _render_soap(result, options)
       @namespace   = soap_config.namespace
-      @operation   = soap_action = request.env['wash_out.soap_action']
+      @operation   = soap_action = request.env['wash_out.soap_action'].include?("urn:") ? request.env['wash_out.soap_action'].gsub("urn:", "") : request.env['wash_out.soap_action']
       @action_spec = self.class.soap_actions[soap_action]
 
       result = { 'value' => result } unless result.is_a? Hash
@@ -190,7 +190,7 @@ module WashOut
 
       controller.send :"around_#{entity}", :_catch_soap_errors
       controller.send :helper, :wash_out
-      # controller.send :"before_#{entity}", :_authenticate_wsse,   :if => :soap_action?
+      controller.send :"before_#{entity}", :_authenticate_wsse,   :if => :soap_action?
       controller.send :"before_#{entity}", :_map_soap_parameters, :if => :soap_action?
       controller.send :"before_#{entity}", :_map_soap_headers, :if => :soap_action?
 
@@ -246,7 +246,7 @@ module WashOut
     end
 
     def soap_action
-      request.env['wash_out.soap_action']
+      request.env['wash_out.soap_action'].include?("urn:") ? request.env['wash_out.soap_action'].gsub("urn:", "") : request.env['wash_out.soap_action']
     end
 
     def xml_data

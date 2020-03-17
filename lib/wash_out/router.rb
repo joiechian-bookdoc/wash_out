@@ -108,6 +108,7 @@ module WashOut
       @controller = @controller_name.constantize
 
       soap_action = parse_soap_action(env)
+      soap_action = soap_action.gsub("urn:", "")
 
       action = if soap_action.blank?
         '_invalid_request'
