@@ -190,7 +190,7 @@ module WashOut
 
       controller.send :"around_#{entity}", :_catch_soap_errors
       controller.send :helper, :wash_out
-      controller.send :"before_#{entity}", :_authenticate_wsse,   :if => :soap_action?
+      # controller.send :"before_#{entity}", :_authenticate_wsse,   :if => :soap_action?
       controller.send :"before_#{entity}", :_map_soap_parameters, :if => :soap_action?
       controller.send :"before_#{entity}", :_map_soap_headers, :if => :soap_action?
 
