@@ -84,7 +84,7 @@ module WashOut
     # Render a SOAP response.
     def _render_soap(result, options)
       @namespace   = soap_config.namespace
-      @operation   = soap_action = request.env['wash_out.soap_action'].include?("urn:") ? request.env['wash_out.soap_action'].gsub("urn:", "") : request.env['wash_out.soap_action']
+      @operation   = soap_action = request.env['wash_out.soap_action'].present? && request.env['wash_out.soap_action'].is_a?(String) && request.env['wash_out.soap_action'].include?("urn:") ? request.env['wash_out.soap_action'].gsub("urn:", "") : request.env['wash_out.soap_action']
       @action_spec = self.class.soap_actions[soap_action]
 
       result = { 'value' => result } unless result.is_a? Hash
@@ -246,7 +246,7 @@ module WashOut
     end
 
     def soap_action
-      request.env['wash_out.soap_action'].include?("urn:") ? request.env['wash_out.soap_action'].gsub("urn:", "") : request.env['wash_out.soap_action']
+      request.env['wash_out.soap_action'].present? && request.env['wash_out.soap_action'].is_a?(String) && request.env['wash_out.soap_action'].include?("urn:") ? request.env['wash_out.soap_action'].gsub("urn:", "") : request.env['wash_out.soap_action']
     end
 
     def xml_data
